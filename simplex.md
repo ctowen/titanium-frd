@@ -31,6 +31,7 @@ Additional hardware required to install Titanium Cloud on the FRD:
 
 - Intel X540T2 Converged Network Adapt T2 - [Amazon](https://www.amazon.com/Intel-X540T2-Converged-Network-Adapt/dp/B0077CS9UM/)
 - Crucial MX500 1TB 3D NAND SATA 2.5 Inch Internal SSD - [Amazon](https://www.amazon.com/Crucial-MX500-NAND-SATA-Internal/dp/B077SF8KMG/)
+- TODO - VLAN Switch (Ubiquity ERX or TP Link)
 - Any SATA 6Gbps Cable - Example on [Amazon](https://www.amazon.com/Monoprice-108782-18-Inch-6Gbps-Locking/dp/B009GUX8YK/)
 - Any USB 3.0 Flash Drive - Example on [Amazon](https://www.amazon.com/Samsung-METAL-Flash-MUF-32BA-AM/dp/B013CCTM2E/)
 
@@ -196,6 +197,12 @@ To ensure that the Titanium Cloud software is fully up to date, apply any patche
 
   Patch installation is complete.
 
+  TODO - we need to stick to a specific patch level for the X3/PCI pass through patch
+
+  TODO - we need to figure out the support model for FRD
+
+  TODO - we need to figure out the licensing
+
 ### Configure controller-0
 
 Copy the ini file from the Copy the ini from a connected server.
@@ -224,3 +231,12 @@ Enter Q at any prompt to abort...
 
 After a few minutes, the message **Configuration was applied** appears.
 
+TODO - Next Steps:
+
+- Configuring Provider Networks at Installation - shell script
+- Provisioning Controller-0 - shell script
+- Host Install - Ubuntu and Windows Server - Heat templates
+- Can we use cloud base for initial configuration of the windows VM?  Heat templates from Rich...
+- VLAN capable switch
+- OpenVPN server???? for remote troubleshooting?
+- 2TB - 1TB - 256/512GB NVMe
