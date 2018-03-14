@@ -29,9 +29,11 @@ Typical Intel&reg; Fog Reference Design (FRD) platform Specifications:
 
 Additional hardware required to install Titanium Cloud on the FRD:
 
-- Intel X540T2 Converged Network Adapt T2 - [Amazon](https://www.amazon.com/Intel-X540T2-Converged-Network-Adapt/dp/B0077CS9UM/)
-- Crucial MX500 1TB 3D NAND SATA 2.5 Inch Internal SSD - [Amazon](https://www.amazon.com/Crucial-MX500-NAND-SATA-Internal/dp/B077SF8KMG/)
-- TODO - VLAN Switch (Ubiquity ERX or TP Link)
+- Intel Ethernet Converged Network Adapter X710-T4 - [Amazon](https://www.amazon.com/Intel-Ethernet-Converged-Network-Adapter/dp/B01M0XXAWP/)
+- NOT - Intel X540T2 Converged Network Adapt T2 - [Amazon](https://www.amazon.com/Intel-X540T2-Converged-Network-Adapt/dp/B0077CS9UM/)
+- 1 x Crucial MX500 1TB 3D NAND SATA 2.5 Inch Internal SSD - [Amazon](https://www.amazon.com/Crucial-MX500-NAND-SATA-Internal/dp/B077SF8KMG/)
+- 1 x Crucial MX500 2TB 3D NAND SATA 2.5 Inch Internal SSD - [Amazon](https://www.amazon.com/Crucial-MX500-NAND-SATA-Internal/dp/B078C515QL/)
+- VLAN capable switch - Example on Amazon
 - Any SATA 6Gbps Cable - Example on [Amazon](https://www.amazon.com/Monoprice-108782-18-Inch-6Gbps-Locking/dp/B009GUX8YK/)
 - Any USB 3.0 Flash Drive - Example on [Amazon](https://www.amazon.com/Samsung-METAL-Flash-MUF-32BA-AM/dp/B013CCTM2E/)
 
@@ -240,3 +242,4 @@ TODO - Next Steps:
 - VLAN capable switch
 - OpenVPN server???? for remote troubleshooting?
 - 2TB - 1TB - 256/512GB NVMe
+- GitGo or GoGit replicated on titanium so they have the documentation?
