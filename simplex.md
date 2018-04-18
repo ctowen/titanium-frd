@@ -4,8 +4,6 @@ typora-copy-images-to: images
 
 # Wind River&reg; Titanium Cloud on the Intel&reg; Edge Compute (Fog) Reference Design platform - Simplex
 
-## Simplex Hardware Configuration
-
 ![1518112144097](images/1518112144097.png)
 
 
