@@ -1,0 +1,121 @@
+
+Prerequisites
+	These instructions (FRP-Simplex-Install.txt)
+	license.lic
+	frp-simplex-config.ini
+		For use with config_controller
+	frp-simplex-setup.sh
+		For setup of system after configuration
+		Designed to be run multiple times
+	USB stick with Titanium Control Release 4 installer
+	Titanium Control Release 4 patches 0001 through 0010 (highly recommended)
+	Ubuntu 16.04 Cloud Image - xenial-server-cloudimg-amd64-disk1.img
+		from https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img
+	Windows Server 2012 image - windows_server_2012_r2_standard_eval_kvm.qcow2
+		from https://cloudbase.it/windows-cloud-images/#download
+
+Hardware Installation
+	Niantic in outside slot
+		For compatability with duplex setups
+	2 GB SSD connected to first SATA connector from front of FRP
+	1 GB SSD connected to third SATA connector from front of FRP
+	Titanium Release 4 USB stick installed
+
+# Power on FRD
+	Press F7 for boot menu
+	Select USB stick for boot
+	All in one graphical
+	Wait several minutes for install and reboot
+
+# Log into console
+	wrsroot/wrsroot
+	Will be notified to change password
+		Current password:	wrsroot
+		New Password:		Wrs20!7cto
+		New Password:		Wrs20!7cto
+
+# Configure IP address - only if copying files from network
+sudo ip addr add 128.224.82.246/23 dev enp0s31f6
+sudo ip link set enp0s31f6 up
+sudo route add default gw 128.224.82.1 enp031f6
+mkdir patches
+mkdir heat-templates
+
+# copy the following files to the FRP
+	license.lic
+	frp-simplex-config.ini
+	frp-simplex-setup.sh
+	patch files to ~/patches
+	heat templates to ~/heat templates
+		Currently none
+
+# Install patches prior to config_controller
+# 	For standard setup, recommend patch 0001 through 0010
+sudo sw-patch upload-dir /home/wrsroot/patches
+sudo sw-patch query
+	# Verify patches 0001 through 0010 available
+sudo sw-patch apply --all
+sudo sw-patch install-local
+rm patches/*
+sudo reboot
+
+# Log into console and configure
+	NOTE:  THIS MUST BE DONE FROM THE CONSOLE
+sudo config_controller --config-file /home/wrsroot/frp-simplex-config.ini
+	# Configures a common setup including OAM addresses
+	# Assumes FRP is behind a firewall so the addresses don't need to change
+
+sudo reboot
+
+# Log into FRP
+
+# Create directory in /opt/backups/images for images too large for home directory
+sudo mkdir /opt/backups/images
+sudo chmod 777 /opt/backups/images
+
+# Copy the following files to /opt/backups/images
+	Windows-Server-2012.qcow2 to /opt/backups/images
+	Ubuntu-14.04-Cloud.qcow2 to /opt/backups/images
+
+# Verify system is in unlocked-enabled-degraded state
+source /etc/nova/openrc
+system host-list
+
+# For standard FRP setup
+./frp-simplex-setup.sh
+	# Note:	Certain parameters can be overridden and passed in "-f <file>"
+	# 	Example in hudson-overrides.cfg
+	#		OAM/external, 10 GbE NIC PCIe address, and whether to load images or create volumes
+
+# When script stops and warns that compute-config-complete is required
+source /etc/nova/openrc
+system compute-config-complete
+
+# Wait for FRP to reboot and reach the available state
+source /etc/nova/openrc
+system host-list
+
+# Rerun setup script
+# Run setup script again
+./frp-simplex-setup.sh
+
+Setup is now complete
+
+ToDo:
+	Standardize what wrsroot password will be
+	What set of networks should be standard
+		Currently created external and one public and one internal network for admin tenant
+	Should there be any preinstalled tenants or tenant networks?
+	Need to decide on OAM IP, subnet, default route
+		Currently assume Rich's settings will be used behind a firewall for every FRP
+	What is best way to copy the files needed to the FRP?
+		scp files, rsync, scp tarball and extract, USB stick
+		Total is currently about 15 GB (mostly images)
+	Do we need to specify NTP for a simplex (what if not reachable)
+	Are there any heat templates to create?
+		Currently none
+	For more automation, consider running setup script using remote CLI
+		
+
+
+

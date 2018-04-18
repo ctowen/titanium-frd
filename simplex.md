@@ -2,42 +2,74 @@
 typora-copy-images-to: images
 ---
 
-# Wind River&reg; Titanium Cloud on the Intel&reg; Fog Reference Design platform - Simplex
+# Wind River&reg; Titanium Cloud on the Intel&reg; Edge Compute (Fog) Reference Design platform - Simplex
 
-### Simplex Hardware Configuration
+## Simplex Hardware Configuration
 
 ![1518112144097](images/1518112144097.png)
 
 
 
-Typical Intel&reg; Fog Reference Design (FRD) platform Specifications:
+### Intel&reg; Fog Reference Design (FRD) platform Specifications
 
 - Intel® Xeon® processor-E3
+
 - 2x8 PCIe
+
 - C236 (server chipset)
+
 - 32GB DDR4 ECC
+
 - WiFi BT M.2 module
+
 - M.2 PCIe x2 SSD
+
 - 4 SATA
+
 - 6 USB
+
 - AMT/VPro/TXT
+
 - TPM2.0, PTT
+
 - Arduino off FPGA
+
 - 3G/4G on PCIe
 
+  ​
 
 
-Additional hardware required to install Titanium Cloud on the FRD:
+### Hardware required to install Titanium Cloud on the FRD
 
-- Intel Ethernet Converged Network Adapter X710-T4 - [Amazon](https://www.amazon.com/Intel-Ethernet-Converged-Network-Adapter/dp/B01M0XXAWP/)
-- NOT - Intel X540T2 Converged Network Adapt T2 - [Amazon](https://www.amazon.com/Intel-X540T2-Converged-Network-Adapt/dp/B0077CS9UM/)
+- Fog Reference Design (FRD) platform
+
+- What we are currently using - Intel X540T2 Converged Network Adapt T2 - [Amazon](https://www.amazon.com/Intel-X540T2-Converged-Network-Adapt/dp/B0077CS9UM/)
+
 - 1 x Crucial MX500 1TB 3D NAND SATA 2.5 Inch Internal SSD - [Amazon](https://www.amazon.com/Crucial-MX500-NAND-SATA-Internal/dp/B077SF8KMG/)
+
 - 1 x Crucial MX500 2TB 3D NAND SATA 2.5 Inch Internal SSD - [Amazon](https://www.amazon.com/Crucial-MX500-NAND-SATA-Internal/dp/B078C515QL/)
+
 - VLAN capable switch - Example on Amazon
+
 - Any SATA 6Gbps Cable - Example on [Amazon](https://www.amazon.com/Monoprice-108782-18-Inch-6Gbps-Locking/dp/B009GUX8YK/)
+
 - Any USB 3.0 Flash Drive - Example on [Amazon](https://www.amazon.com/Samsung-METAL-Flash-MUF-32BA-AM/dp/B013CCTM2E/)
 
+- Future - Recommended by network team - Intel Ethernet Converged Network Adapter X710-T4 - [Amazon](https://www.amazon.com/Intel-Ethernet-Converged-Network-Adapter/dp/B01M0XXAWP/)
 
+  ​
+
+
+### Other Prerequisites
+
+- license.lic - You will need a license file from Wind River to install Titanium Controller
+- config folder including answer files, scripts and patches
+- USB stick with Titanium Control Release 4 installer
+- Titanium Control Release 4 patches 0001 through 0010 (highly recommended)
+
+
+
+### Hardware Configuration
 
 Install the Network Adapter into PCI Slot 2 to avoid the adapter hitting the capacitors at the end of Slot 1.
 
@@ -69,15 +101,15 @@ The platform should look something like this when you have added the Network Ada
 
 You can either get access to the latest software through your Wind River representative or if you have Windshare access you can obtain it there.
 
-Log into https://windshare.windriver.com/ with your Wind River account.  If you don't have account
+Log into https://windshare.windriver.com/ with your Wind River account.  If you don't have account then
 
-TODO - how to get an account
+TODO - how does one get an account?
 
 ![1518115485314](images/1518115485314.png)
 
 
 
-Download the lasted version of Titanium Cloud as well as the license file.  If you do not have access to a license file, contact your Wind River representative.
+Download the lasted version of Titanium Cloud as well as the license file.  If you do not have access to a license file, contact your Wind River representative.  You will need it to complete this guide.
 
 ### Copy Wind River Titanium to USB Flash Drive
 
@@ -113,9 +145,7 @@ Monitor the installation until it is complete.  Remove the USB Flash Drive to en
 
 Log into the host as wrsroot, with password wrsroot.
 
-The first time you log in as wrsroot, you are required to change your password.  For the kit we are using the default password **FRD4you!**
-
-TODO - is there a better default password?
+The first time you log in as wrsroot, you are required to change your password.  For the kit we are using the default password **Wrs20!7cto**
 
 ```
 Changing password for wrsroot.
@@ -130,47 +160,66 @@ New password:
 
 Enter a new password for the wrsroot account.
 
-```
+```Copy the License  TODO - we need to figure out the licensing - how do they get it?  Copy the Titanium Cloud license file to /home/wrsroot/license.lic on the controller.
 Retype new password:
 ```
 
-### Copy the License
+### Copy Files to FRD
 
-Copy the Titanium Cloud license file to /home/wrsroot/license.lic on the controller.
+There are several files that are needed to perform the Install.  These files include the following:
 
-For an OAM network connection, use an scp command similar to the following:
+| File/Folder            | Purpose                                                    |
+| ---------------------- | ---------------------------------------------------------- |
+| license.lic            | Licensing information                                      |
+| frp-simplex-config.ini | Configuration files that help to automate the installation |
+| frp-simplex-setup.sh   | Script that does additional network configuration          |
+| /patches               | Updates to the Titanium Control software                   |
+| Heat Templates         | Automate the configuration of Guest VMs                    |
 
-```
-scp username@sourcehost:sourcepath/license.lic /home/wrsroot
-```
+There are several ways to copy these files to your system, however in most cases USB is the easiest.
 
 For a USB drive, use a cp command similar to the following:
 
 ```
-cp /media/sdc/license.lic /home/wrsroot
+cp -r /media/sdc/config /home/wrsroot
 ```
+
+For an OAM network connection, use an scp command similar to the following:
+
+```
+scp -r username@sourcehost:sourcepath/config /home/wrsroot
+```
+
+If at this time you need networking for SCP, you can use commands similar to the following to configure your IP address.
+
+```
+sudo ip addr add 128.224.82.246/23 dev enp0s31f6
+sudo ip link set enp0s31f6 up
+sudo route add default gw 128.224.82.1 enp031f6
+```
+
+### Copy the License
+
+TODO - we need to figure out the licensing - how do they get it?
+
+Ensure the Titanium Cloud license file has been copied to /home/wrsroot/license.lic on the controller.
 
 ### Applying Patches
 
+***Warning: For this guide only Titanium Control Release 4 patches 0001 through 0010 are highly recommended.***
+
 To ensure that the Titanium Cloud software is fully up to date, apply any patches immediately after initializing controller-0 with software.
 
-1. Copy the patches from a connected server.
+1. Upload the patches to the patch storage area.
 
   ```
-  $ scp username@sourcehost:sourcepath/patchfile /home/wrsroot
+  $ sudo sw-patch upload-dir /home/wrsroot/patches
   ```
 
-  Use the following command, adjusting the media mount point as needed, if you are using a
-  USB flash drive instead:
+2. Verify patches 0001 through 0010 available.
 
   ```
-  $ cp /media/sdc/patchfile /home/wrsroot
-  ```
-
-2. Upload the patches to the patch storage area.
-
-  ```
-  $ sudo sw-patch upload ./patchfile
+  sudo sw-patch query
   ```
 
 3. Apply the patches.
@@ -194,52 +243,124 @@ To ensure that the Titanium Cloud software is fully up to date, apply any patche
 5. Execute the following command to reboot controller-0.
 
   ```
-  $ sudo shutdown -r now
+  $ sudo reboot
   ```
 
   Patch installation is complete.
 
-  TODO - we need to stick to a specific patch level for the X3/PCI pass through patch
-
-  TODO - we need to figure out the support model for FRD
-
-  TODO - we need to figure out the licensing
 
 ### Configure controller-0
 
-Copy the ini file from the Copy the ini from a connected server.
+1. Run the following command to initiate the controller configuration.
 
-```
-$ scp username@sourcehost:sourcepath/ini /home/wrsroot
-```
+   ```
+   $ sudo config_controller --config-file /home/wrsroot/frp-simplex-config.ini
+   ```
 
-Use the following command, adjusting the media mount point as needed, if you are using a
-USB flash drive instead:
+   **WARNING: You must run config_controller from the controller-0 console.**
 
-```
-$ cp /media/sdc/ini /home/wrsroot
-```
+   The frp-simplex-config.ini configures a common setup including OAM addresses.  This also assumes FRP is behind a firewall so the addresses don't need to change.
 
-Run the following command to initiate the controller configuration.
+2. Execute the following command to reboot controller-0.
 
-TODO - how do we use the ini file?
+   ```
+   $ sudo reboot
+   ```
 
-```
-$ sudo config_controller
-Titanium Cloud Configuration
-======================================
-Enter Q at any prompt to abort...
-```
+   Configuration is complete.
 
-After a few minutes, the message **Configuration was applied** appears.
+### Copy Images and Verify State
 
-TODO - Next Steps:
+1. Create directory in /opt/backups/images because the images are too large for home directory
 
+   ```
+   sudo mkdir /opt/backups/images
+   sudo chmod 777 /opt/backups/images
+   ```
+
+2. Copy the following files to /opt/backups/images
+
+   Ubuntu-14.04-Cloud.qcow2 from https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img
+
+   TODO: How do they create Ubuntu-14.04-Cloud.qcow2 from xenial-server-cloudimg-amd64-disk1.img?
+
+   Windows-Server-2012.qcow2 from https://cloudbase.it/windows-cloud-images/#download
+
+   TODO: Do they have to be named exactly Ubuntu-14.04-Cloud.qcow2 and Windows-Server-2012.qcow2?
+
+3. Verify system is in unlocked-enabled-degraded state
+
+   TODO: what are they looking for?
+
+   ```
+   source /etc/nova/openrc
+   system host-list
+   ```
+
+   For standard FRP setup
+
+### Run the Networking Configuration Script
+
+The script allows a configuration file to be used that overrides some defaults like the networks addresses and whether to load images or create volumes.  To use it, just add –f <filename> to the command line. 
+
+Example in hudson-overrides.cfg (OAM/external, 10 GbE NIC PCIe address, and whether to load images or create volumes)
+
+1. Run the Network Configuration Script
+
+   ```
+   ./frp-simplex-setup.sh
+   ```
+
+2. When script stops and warns that compute-config-complete is required
+
+   ```
+   source /etc/nova/openrc
+   system compute-config-complete
+   ```
+
+3. Wait for FRP to reboot and reach the available state
+
+   ```
+   source /etc/nova/openrc
+   system host-list
+   ```
+
+4. Run the Network Configuration Script Again.  The setup script is designed to be run multiple times.   The procedure requires it twice, once before compute-config-complete and once after.  The script can be run as many times as you want to and it will not redo things you have already done unless you delete something.  For example if you delete the images, volumes, networks, providernets, or router it will recreate them.  The script logs commands and results to a log file.
+
+   ```
+   ./frp-simplex-setup.sh
+   ```
+
+5. Setup is now complete
+
+
+
+
+
+
+
+TODO:
+
+- Standardize what wrsroot password will be
+- What set of networks should be standard
+  - Currently created external and one public and one internal network for admin tenant
+- Should there be any preinstalled tenants or tenant networks?
+- Need to decide on OAM IP, subnet, default route
+  - Currently assume Rich's settings will be used behind a firewall for every FRP
+- What is best way to copy the files needed to the FRP?
+  - scp files, rsync, scp tarball and extract, USB stick
+  - Total is currently about 15 GB (mostly images)
+- Do we need to specify NTP for a simplex (what if not reachable)
+- Are there any heat templates to create?
+  - Currently none
+- For more automation, consider running setup script using remote CLI
 - Configuring Provider Networks at Installation - shell script
 - Provisioning Controller-0 - shell script
 - Host Install - Ubuntu and Windows Server - Heat templates
 - Can we use cloud base for initial configuration of the windows VM?  Heat templates from Rich...
-- VLAN capable switch
 - OpenVPN server???? for remote troubleshooting?
 - 2TB - 1TB - 256/512GB NVMe
 - GitGo or GoGit replicated on titanium so they have the documentation?
+
+
+
