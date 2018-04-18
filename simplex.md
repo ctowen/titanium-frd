@@ -61,7 +61,7 @@ typora-copy-images-to: images
 ### Other Prerequisites
 
 - license.lic - You will need a license file from Wind River to install Titanium Controller
-- config folder including answer files, scripts and patches
+- [config](https://github.com/ctowen/titanium-frd/tree/master/config) folder including answer files, scripts and patches
 - USB stick with Titanium Control Release 4 installer
 - Titanium Control Release 4 patches 0001 through 0010 (highly recommended)
 
@@ -164,15 +164,15 @@ Retype new password:
 
 ### Copy Files to FRD
 
-There are several files that are needed to perform the Install.  These files include the following:
+There are several files on [github](https://github.com/ctowen/titanium-frd/tree/master/config) that are needed to perform the Install.  These files include the following:
 
-| File/Folder            | Purpose                                                    |
-| ---------------------- | ---------------------------------------------------------- |
-| license.lic            | Licensing information                                      |
-| frp-simplex-config.ini | Configuration files that help to automate the installation |
-| frp-simplex-setup.sh   | Script that does additional network configuration          |
-| /patches               | Updates to the Titanium Control software                   |
-| Heat Templates         | Automate the configuration of Guest VMs                    |
+| File/Folder            | Purpose                                                      |
+| ---------------------- | ------------------------------------------------------------ |
+| license.lic            | Licensing information                                        |
+| frp-simplex-config.ini | Configuration files that help to automate the installation   |
+| frp-simplex-setup.sh   | Script that does additional network configuration            |
+| /patches               | Updates to the Titanium Control software - get these for now from WindShare |
+| /heat                  | Automate the configuration of Guest VMs - where are these?   |
 
 There are several ways to copy these files to your system, however in most cases USB is the easiest.
 
