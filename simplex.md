@@ -171,8 +171,8 @@ There are several files on [github](https://github.com/ctowen/titanium-frd/tree/
 | license.lic            | Licensing information                                        |
 | frp-simplex-config.ini | Configuration files that help to automate the installation   |
 | frp-simplex-setup.sh   | Script that does additional network configuration            |
-| /patches               | Updates to the Titanium Control software - get these for now from WindShare |
-| /heat                  | Automate the configuration of Guest VMs - where are these?   |
+| /patches               | Updates to the Titanium Control software - get these from WindShare |
+| /heat                  | Automate the configuration of Guest VMs - TODO: where are these? |
 
 There are several ways to copy these files to your system, however in most cases USB is the easiest.
 
